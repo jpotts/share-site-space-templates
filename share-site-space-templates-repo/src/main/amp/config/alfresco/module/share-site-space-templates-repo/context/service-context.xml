@@ -17,19 +17,19 @@
     limitations under the License.
 -->
 <beans>
-    
-    <!-- A simple class that is initialized by Spring -->
-    <bean id="changeme.exampleBean" class="org.alfresco.demoamp.Demo" init-method="init" />
-    
-    <!-- A simple module component that will be executed once -->
-    <bean id="changeme.exampleComponent" class="org.alfresco.demoamp.DemoComponent" parent="module.baseComponent" >
-        <property name="moduleId" value="${project.artifactId}" />  <!-- See module.properties -->
-        <property name="name" value="exampleComponent" />
-        <property name="description" value="A demonstration component" />
-        <property name="sinceVersion" value="2.0" />
-        <property name="appliesFromVersion" value="2.0" />
-        <property name="nodeService" ref="NodeService" />
-        <property name="nodeLocatorService" ref="nodeLocatorService" />
+    <bean id="${project.artifactId}_siteBehavior" class="com.ecmarchitect.share.behavior.ShareDocumentLibraryFromTemplate" init-method="init">
+        <property name="nodeService">
+            <ref bean="NodeService" />
+        </property>
+        <property name="policyComponent">
+            <ref bean="policyComponent" />
+        </property>
+        <property name="fileFolderService">
+            <ref bean="FileFolderService" />
+        </property>
+        <property name="searchService">
+            <ref bean="SearchService" />
+        </property>
     </bean>
     
 </beans>
