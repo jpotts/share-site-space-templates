@@ -67,10 +67,11 @@ public class ShareDocumentLibraryFromTemplate implements NodeServicePolicies.OnC
 		
 		//see if there is a folder in the Space Templates folder of the same name
 		String query = "+PATH:\"/app:company_home/app:dictionary/app:space_templates/*\" +@cm\\:name:\"" + sitePreset + "\"";
-		ResultSet rs = searchService.query(StoreRef.STORE_REF_WORKSPACE_SPACESSTORE, SearchService.LANGUAGE_FTS_ALFRESCO, query);
+		ResultSet rs = searchService.query(StoreRef.STORE_REF_WORKSPACE_SPACESSTORE, SearchService.LANGUAGE_LUCENE, query);
 		
 		//if not, bail, there is nothing more to do
 		if (rs.length() <= 0) {
+			logger.debug("Found no space templates for: " + sitePreset);
 			return;
 		}
 

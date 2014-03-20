@@ -60,17 +60,8 @@ public class ShareSiteSpaceTemplateTest {
     	SiteInfo testSite = siteService.createSite("site-dashboard", siteShortName, "test site", "test site description", SiteVisibility.PUBLIC);
     	
     	NodeRef documentLibrary = siteService.getContainer(testSite.getShortName(), SiteService.DOCUMENT_LIBRARY);
-    
-    	List<ChildAssociationRef> children = nodeService.getChildAssocs(documentLibrary);
-    	
-    	assertEquals(0, children.size());
-    	
-    	//debug
-    	if (children.size() > 0) {
-    		for (ChildAssociationRef child : children) {    			
-    			logger.debug("Child:" + nodeService.getProperty(child.getChildRef(), ContentModel.PROP_NAME));
-    		}
-    	}
+
+    	assertEquals(documentLibrary, null);
     	
     	siteService.deleteSite(siteShortName);
     }
