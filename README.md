@@ -11,7 +11,7 @@ If you modify your site presets to add additional types of Share sites, you can 
 
 Installation
 ------------
-Use `mvn install` to create the AMP. By default the POM is set to depend on the latest Alfresco Community Edition version which is 4.2.f.
+Use `mvn install` to create the AMP. By default the POM is set to depend on the latest Alfresco Community Edition version which is 5.0.d.
 
 You can then install the AMP as you normally would using the MMT.
 
