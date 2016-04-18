@@ -9,6 +9,7 @@ import org.alfresco.repo.policy.Behaviour;
 import org.alfresco.repo.policy.Behaviour.NotificationFrequency;
 import org.alfresco.repo.policy.JavaBehaviour;
 import org.alfresco.repo.policy.PolicyComponent;
+import org.alfresco.repo.site.SiteModel;
 import org.alfresco.service.cmr.model.FileExistsException;
 import org.alfresco.service.cmr.model.FileFolderService;
 import org.alfresco.service.cmr.model.FileNotFoundException;
@@ -22,15 +23,12 @@ import org.alfresco.service.namespace.NamespaceService;
 import org.alfresco.service.namespace.QName;
 import org.apache.log4j.Logger;
 
+import static org.alfresco.repo.site.SiteModel.ASPECT_SITE_CONTAINER;
+import static org.alfresco.repo.site.SiteModel.PROP_SITE_PRESET;
+import static org.alfresco.repo.site.SiteModel.TYPE_SITE;
+
 public class ShareDocumentLibraryFromTemplate implements NodeServicePolicies.OnCreateNodePolicy {
 
-	// are these not already defined by Alfresco somewhere?
-	private static final String SITE_MODEL_URI = "http://www.alfresco.org/model/site/1.0";
-	private static final QName TYPE_SITE = QName.createQName(SITE_MODEL_URI, "site");
-	private static final QName PROP_SITE_PRESET = QName.createQName(SITE_MODEL_URI, "sitePreset");
-	private static final QName ASPECT_SITE_CONTAINER = QName.createQName(SITE_MODEL_URI, "siteContainer");
-	private static final QName PROP_SITE_COMPONENT_ID = QName.createQName(SITE_MODEL_URI, "componentId");
-	
 	// Dependencies
     private NodeService nodeService;
     private PolicyComponent policyComponent;
@@ -92,7 +90,7 @@ public class ShareDocumentLibraryFromTemplate implements NodeServicePolicies.OnC
 			//add the site container aspect, set the descriptions, set the component ID
 			Map<QName, Serializable> props = new HashMap<QName, Serializable>();
 			props.put(ContentModel.PROP_DESCRIPTION, "Document Library");
-			props.put(PROP_SITE_COMPONENT_ID, "documentLibrary");
+			props.put(SiteModel.PROP_COMPONENT_ID, "documentLibrary");
 			nodeService.addAspect(documentLibrary, ASPECT_SITE_CONTAINER, props);
 
 		} catch (FileExistsException e) {
