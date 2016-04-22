@@ -78,6 +78,13 @@ public class ShareDocumentLibraryFromTemplate implements NodeServicePolicies.OnC
 			logger.debug("Space template doesn't exist");
 			return;
 		}
+		
+		//confirm that the space template's name is an exact match -- Issue #3
+		String templateName = (String) nodeService.getProperty(spaceTemplate, ContentModel.PROP_NAME);
+		if (!templateName.equals(sitePreset)) {
+			logger.debug("Space template name is not an exact match: " + templateName);
+			return;
+		}
 
 		//otherwise, create the documentLibrary folder as a child of this site folder
 		//using the space template found above
