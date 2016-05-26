@@ -80,16 +80,27 @@ public class ShareDocumentLibraryFromTemplate implements NodeServicePolicies.OnC
 			return;
 		}
 
-		NodeRef spaceTemplate = rs.getNodeRef(0);
-		if (!nodeService.exists(spaceTemplate)) {
-			logger.debug("Space template doesn't exist");
-			return;
+		NodeRef spaceTemplate = null;
+		for (int i = 0; i < rs.length(); i++) {
+			spaceTemplate = rs.getNodeRef(i);
+			if (!nodeService.exists(spaceTemplate)) {
+				spaceTemplate = null;
+				continue;
+			} else {
+				//confirm that the space template's name is an exact match -- Issue #3
+				String templateName = (String) nodeService.getProperty(spaceTemplate, ContentModel.PROP_NAME);
+				if (!templateName.equals(sitePreset)) {
+					logger.debug("Space template name is not an exact match: " + templateName);
+					spaceTemplate = null;
+					continue;
+				} else {
+					break;
+				}
+			}
 		}
-		
-		//confirm that the space template's name is an exact match -- Issue #3
-		String templateName = (String) nodeService.getProperty(spaceTemplate, ContentModel.PROP_NAME);
-		if (!templateName.equals(sitePreset)) {
-			logger.debug("Space template name is not an exact match: " + templateName);
+
+		if (spaceTemplate == null) {
+			logger.debug("Space template doesn't exist");
 			return;
 		}
 
