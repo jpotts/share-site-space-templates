@@ -12,25 +12,18 @@
         </property>
     </bean>
 
-    <bean id="share-site-space-templates-repo.folderBootstrap" class="org.alfresco.repo.admin.patch.impl.GenericBootstrapPatch" parent="basePatch">
-        <property name="id"><value>share-site-space-templates-repo.folderBootstrap</value></property>
-        <property name="description"><value>share-site-space-templates-repo.folderBootstrap.description</value></property>
-        <property name="fixesFromSchema"><value>0</value></property>
-        <property name="fixesToSchema"><value>${version.schema}</value></property>
-        <property name="targetSchema"><value>10000</value></property>
-        <property name="importerBootstrap">
-            <ref bean="spacesBootstrap" />
-        </property>
-        <property name="checkPath">
-            <value>/${spaces.company_home.childname}/${spaces.dictionary.childname}/app:site_folder_templates</value>
-        </property>
-        <property name="bootstrapView">
-            <props>
-                <prop key="path">/${spaces.company_home.childname}/${spaces.dictionary.childname}</prop>
-                <prop key="location">alfresco/module/${project.artifactId}/bootstrap/template-folder-bootstrap.xml</prop>
-                <prop key="messages">alfresco.module.${project.artifactId}.messages.bootstrap-messages</prop>
-            </props>
-        </property>
+    <bean id="customSpacesBootstrap" parent="spacesStoreImporter" singleton="true" >
+      <property name="useExistingStore">
+        <value>true</value>
+      </property>
+      <property name="bootstrapViews">
+        <list>
+          <props>
+            <prop key="path">/${spaces.company_home.childname}/${spaces.dictionary.childname}</prop>
+            <prop key="location">alfresco/module/${project.artifactId}/bootstrap/template-folder-bootstrap.xml</prop>
+            <prop key="messages">alfresco.module.${project.artifactId}.messages.bootstrap-messages</prop>
+          </props>
+        </list>
+      </property>
     </bean>
-
 </beans>
