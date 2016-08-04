@@ -1,7 +1,8 @@
 package com.ecmarchitect.share.behavior;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import static org.alfresco.repo.site.SiteModel.PROP_SITE_PRESET;
+import static org.alfresco.repo.site.SiteModel.TYPE_SITE;
+
+import java.util.List;
 
 import org.alfresco.model.ContentModel;
 import org.alfresco.repo.node.NodeServicePolicies;
@@ -9,7 +10,6 @@ import org.alfresco.repo.policy.Behaviour;
 import org.alfresco.repo.policy.Behaviour.NotificationFrequency;
 import org.alfresco.repo.policy.JavaBehaviour;
 import org.alfresco.repo.policy.PolicyComponent;
-import org.alfresco.repo.site.SiteModel;
 import org.alfresco.service.cmr.model.FileExistsException;
 import org.alfresco.service.cmr.model.FileFolderService;
 import org.alfresco.service.cmr.model.FileNotFoundException;
@@ -19,21 +19,20 @@ import org.alfresco.service.cmr.repository.NodeService;
 import org.alfresco.service.cmr.repository.StoreRef;
 import org.alfresco.service.cmr.search.ResultSet;
 import org.alfresco.service.cmr.search.SearchService;
+import org.alfresco.service.cmr.site.SiteService;
 import org.alfresco.service.namespace.NamespaceService;
 import org.alfresco.service.namespace.QName;
 import org.apache.log4j.Logger;
 
-import static org.alfresco.repo.site.SiteModel.ASPECT_SITE_CONTAINER;
-import static org.alfresco.repo.site.SiteModel.PROP_SITE_PRESET;
-import static org.alfresco.repo.site.SiteModel.TYPE_SITE;
-
 public class ShareDocumentLibraryFromTemplate implements NodeServicePolicies.OnCreateNodePolicy {
 
+	private static final String DOCUMENT_LIBRARY = "documentLibrary";
 	// Dependencies
     private NodeService nodeService;
     private PolicyComponent policyComponent;
     private FileFolderService fileFolderService;
     private SearchService searchService;
+    private SiteService siteService;
 
     // Behaviors
     private Behaviour onCreateNode;
@@ -42,7 +41,7 @@ public class ShareDocumentLibraryFromTemplate implements NodeServicePolicies.OnC
     
     public void init() {
     	if (logger.isDebugEnabled()) logger.debug("Initializing rateable behaviors");
-    	
+
         // Create behaviors
         this.onCreateNode = new JavaBehaviour(this, "onCreateNode", NotificationFrequency.TRANSACTION_COMMIT);
 
@@ -102,32 +101,42 @@ public class ShareDocumentLibraryFromTemplate implements NodeServicePolicies.OnC
 		if (spaceTemplate == null) {
 			logger.debug("Space template doesn't exist");
 			return;
-		}
-
-		//otherwise, create the documentLibrary folder as a child of this site folder
-		//using the space template found above
-		NodeRef documentLibrary;
-		try {
-			documentLibrary = fileFolderService.copy(spaceTemplate, siteFolder, "documentLibrary").getNodeRef();
-
-			logger.debug("Successfully created the document library node from a template");
-
-			//add the site container aspect, set the descriptions, set the component ID
-			Map<QName, Serializable> props = new HashMap<QName, Serializable>();
-			props.put(ContentModel.PROP_DESCRIPTION, "Document Library");
-			props.put(SiteModel.PROP_COMPONENT_ID, "documentLibrary");
-			nodeService.addAspect(documentLibrary, ASPECT_SITE_CONTAINER, props);
-
-		} catch (FileExistsException e) {
-			logger.debug("The document library node already exists. Each child needs to be copied.");
-			// TODO implement this piece
-			//iterate over the children of the source space template and copy them into the target
-			
-		} catch (FileNotFoundException e) {
-			//can't find the space template, just bail
-			logger.warn("Share site tried to use a space template, but the source space template could not be found.");
+		} else {
+			logger.debug("Found space template: " + nodeService.getProperty(spaceTemplate, ContentModel.PROP_NAME));
 		}
 		
+		// otherwise, create the documentLibrary folder
+		String siteId = (String) nodeService.getProperty(siteFolder, ContentModel.PROP_NAME);
+		logger.debug("Site ID: " + siteId);
+		
+		// use the site service to do this so that permissions get set correctly
+		NodeRef documentLibrary = siteService.getContainer(siteId, DOCUMENT_LIBRARY);
+		if (documentLibrary == null) {
+			// create the document library container using the site service
+			documentLibrary = siteService.createContainer(siteId, DOCUMENT_LIBRARY, null, null);
+			if (documentLibrary == null) {
+				logger.error("Document library could not be created for: " + siteId);
+			}			
+		}
+		
+		// now, for each child in the space template, do a copy to the documentLibrary		
+		List<ChildAssociationRef> children = nodeService.getChildAssocs(spaceTemplate);
+		for (ChildAssociationRef childRef : children) {
+			// we only want contains associations
+			if (childRef.getQName().equals(ContentModel.ASSOC_CONTAINS)) {
+				continue;
+			}
+			NodeRef child = childRef.getChildRef();
+			try {
+				fileFolderService.copy(child, documentLibrary, null);
+				logger.debug("Successfully copied a child node from the template");
+			} catch (FileExistsException e) {
+				logger.debug("The child node already exists in the document library.");
+			} catch (FileNotFoundException e) {
+				//can't find the space template, just bail
+				logger.warn("Share site tried to use a space template, but the source space template could not be found.");
+			}
+		}		
 	}
 
 	public NodeService getNodeService() {
@@ -163,6 +172,14 @@ public class ShareDocumentLibraryFromTemplate implements NodeServicePolicies.OnC
 
 	public void setSearchService(SearchService searchService) {
 		this.searchService = searchService;
+	}
+
+	public SiteService getSiteService() {
+		return siteService;
+	}
+
+	public void setSiteService(SiteService siteService) {
+		this.siteService = siteService;
 	}
 
 }

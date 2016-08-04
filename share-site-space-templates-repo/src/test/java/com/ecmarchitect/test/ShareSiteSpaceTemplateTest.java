@@ -56,12 +56,12 @@ public class ShareSiteSpaceTemplateTest {
     	AuthenticationUtil.setFullyAuthenticatedUser(ADMIN_USER_NAME);
 
     	String siteShortName = "test-site-" + System.currentTimeMillis();
-
+    	logger.debug("without space template: " + siteShortName);
     	SiteInfo testSite = siteService.createSite("site-dashboard", siteShortName, "test site", "test site description", SiteVisibility.PUBLIC);
     	
     	NodeRef documentLibrary = siteService.getContainer(testSite.getShortName(), SiteService.DOCUMENT_LIBRARY);
 
-    	assertEquals(documentLibrary, null);
+    	assertEquals(null, documentLibrary);
     	
     	siteService.deleteSite(siteShortName);
     }
@@ -93,16 +93,17 @@ public class ShareSiteSpaceTemplateTest {
 							   contentProps).getChildRef();
 
     	String siteShortName = "test-site-" + System.currentTimeMillis();
-		
+		logger.debug("with space template: " + siteShortName);
 		SiteInfo testSite = siteService.createSite(presetName, siteShortName, "test site", "test site description", SiteVisibility.PUBLIC);
     	
     	NodeRef documentLibrary = siteService.getContainer(testSite.getShortName(), SiteService.DOCUMENT_LIBRARY);
     
     	List<ChildAssociationRef> children = nodeService.getChildAssocs(documentLibrary);
-    	
-    	assertEquals(1, children.size());
+    	int size = children.size();
 
     	siteService.deleteSite(siteShortName);
     	nodeService.deleteNode(spaceTemplate);
+    	
+    	assertEquals(1, size);
     }
 }

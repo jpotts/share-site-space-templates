@@ -30,6 +30,9 @@
         <property name="searchService">
             <ref bean="SearchService" />
         </property>
+        <property name="siteService">
+            <ref bean="SiteService" />
+        </property>        
     </bean>
     
 </beans>
