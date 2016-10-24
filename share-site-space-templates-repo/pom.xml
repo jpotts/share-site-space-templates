@@ -4,39 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.metaversant</groupId>
     <artifactId>share-site-space-templates-repo</artifactId>
-    <version>1.1.2-SNAPSHOT</version>
-    <name>share-site-space-templates-repo AMP project</name>
-    <url>https://github.com/jpotts/share-site-space-templates</url>
-
     <packaging>amp</packaging>
+
+    <name>share-site-space-templates-repo AMP project</name>
     <description>Manages the lifecycle of the share-site-space-templates-repo AMP (Alfresco Module Package)</description>
 
-    <licenses>
-      <license>
-        <name>The Apache License, Version 2.0</name>
-        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      </license>
-    </licenses>
-
-    <developers>
-      <developer>
-        <name>Jeff Potts</name>
-        <email>info@metaversant.com</email>
-        <organization>Metaversant Group, Inc.</organization>
-        <organizationUrl>http://www.metaversant.com</organizationUrl>
-      </developer>
-    </developers>
-
-    <scm>
-      <connection>scm:git:git://github.com/jpotts/share-site-space-templates.git</connection>
-      <developerConnection>scm:git:ssh://github.com:jpotts/share-site-space-templates.git</developerConnection>
-      <url>http://github.com/jpotts/share-site-space-templates/tree/master</url>
-    </scm>
-
     <parent>
-        <groupId>org.alfresco.maven</groupId>
-        <artifactId>alfresco-sdk-parent</artifactId>
-        <version>2.2.0</version>
+        <groupId>com.metaversant</groupId>
+        <artifactId>share-site-space-templates</artifactId>
+        <version>1.1.2-SNAPSHOT</version>
     </parent>
 
     <!--
