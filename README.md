@@ -11,8 +11,36 @@ Alternatively, you can store your Share Site Space Templates in a Data Dictionar
 
 If you modify your site presets to add additional types of Share sites, you can create additional space templates for each type of site.
 
-Installation
-------------
+Maven
+-----
+Add the dependencies and overlays to the POM file of your WAR project.
+
+For the repository tier, in a project created with the all-in-one archetype, edit repo/pom.xml:
+
+
+    <dependencies>
+      ...
+      <dependency>
+          <groupId>com.metaversant</groupId>
+          <artifactId>share-site-space-templates-repo</artifactId>
+          <version>1.1.2</version>
+          <type>amp</type>
+      </dependency>
+      ...
+    </dependencies>
+
+    <overlays>
+      ...
+      <overlay>
+          <groupId>com.metaversant</groupId>
+          <artifactId>share-site-space-templates-repo</artifactId>
+          <type>amp</type>
+      </overlay>
+      ...
+    </overlays>
+
+Manual Installation
+-------------------
 Use `mvn install` to create the AMP.
 
 You can then install the AMP as you normally would using the MMT.
