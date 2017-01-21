@@ -17,22 +17,25 @@
     limitations under the License.
 -->
 <beans>
-    <bean id="${project.artifactId}_siteBehavior" class="com.ecmarchitect.share.behavior.ShareDocumentLibraryFromTemplate" init-method="init">
+    <bean id="${project.artifactId}_siteBehavior"
+          class="com.ecmarchitect.share.behavior.ShareDocumentLibraryFromTemplate" init-method="init">
         <property name="nodeService">
-            <ref bean="NodeService" />
+            <ref bean="NodeService"/>
         </property>
         <property name="policyComponent">
-            <ref bean="policyComponent" />
+            <ref bean="policyComponent"/>
         </property>
         <property name="fileFolderService">
-            <ref bean="FileFolderService" />
+            <ref bean="FileFolderService"/>
         </property>
         <property name="searchService">
-            <ref bean="SearchService" />
+            <ref bean="SearchService"/>
         </property>
         <property name="siteService">
-            <ref bean="SiteService" />
-        </property>        
+            <ref bean="SiteService"/>
+        </property>
+        <property name="copyService">
+            <ref bean="CopyService"/>
+        </property>
     </bean>
-    
 </beans>

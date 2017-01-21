@@ -1,15 +1,24 @@
 share-site-space-templates
 ==========================
 
-Adds the ability to create a default set of folders to an Alfresco Share site by leveraging Space Templates
+Adds the ability to create a default set of folders to an Alfresco Share site by leveraging Space Templates.
 
-For example, the out-of-the-box Share site "type" is shown in English as "Collaboration Site". Its preset ID is "site-dashboard".
+For example, the out-of-the-box Share site "type" is shown in English as "Collaboration Site". Its preset ID is
+"site-dashboard".
 
-So after installing this AMP in your Alfresco WAR, you can create a folder under Data Dictionary/Space Templates called "site-dashboard". Then anything you put in that folder will be copied into the document library of new "Collaboration Site" sites.
+After installing this AMP in your Alfresco WAR, you can create a folder under Data Dictionary/Space Templates
+called "site-dashboard". Then, anything you put in that folder will be copied into the document library of new
+"Collaboration Site" sites.
 
-Alternatively, you can store your Share Site Space Templates in a Data Dictionary folder called Site Folder Templates. That will keep them separate from traditional Space Templates.
+Alternatively, you can store your Share Site Space Templates in a Data Dictionary folder called Site Folder Templates,
+which is a folder this add-on will automatically add to your Data Dictionary. Storing your Share Site Space Templates
+in the Site Folder Templates folder will keep them separate from traditional Space Templates.
 
-If you modify your site presets to add additional types of Share sites, you can create additional space templates for each type of site.
+If you modify your site presets to add additional types of Share sites, you can create additional space templates for
+each type of site.
+
+If you add rules to your Share Site Space Template, those rules will be copied to the new site's document library when
+the site is created.
 
 Maven
 -----
