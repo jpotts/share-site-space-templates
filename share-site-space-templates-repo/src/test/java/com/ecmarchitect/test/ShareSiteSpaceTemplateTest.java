@@ -24,17 +24,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.tradeshift.test.remote.Remote;
-import com.tradeshift.test.remote.RemoteTestRunner;
-
-@RunWith(RemoteTestRunner.class)
-@Remote(runnerClass=SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:alfresco/application-context.xml")
 public class ShareSiteSpaceTemplateTest {
-	    
+
     private static final String ADMIN_USER_NAME = "admin";
 
     static Logger logger = Logger.getLogger(ShareSiteSpaceTemplateTest.class);
@@ -50,7 +42,7 @@ public class ShareSiteSpaceTemplateTest {
     @Autowired
     @Qualifier("SearchService")
     protected SearchService searchService;
-    
+
     @Test
     public void testCreateWithoutSpaceTemplate() {
     	AuthenticationUtil.setFullyAuthenticatedUser(ADMIN_USER_NAME);
@@ -58,14 +50,14 @@ public class ShareSiteSpaceTemplateTest {
     	String siteShortName = "test-site-" + System.currentTimeMillis();
     	logger.debug("without space template: " + siteShortName);
     	SiteInfo testSite = siteService.createSite("site-dashboard", siteShortName, "test site", "test site description", SiteVisibility.PUBLIC);
-    	
+
     	NodeRef documentLibrary = siteService.getContainer(testSite.getShortName(), SiteService.DOCUMENT_LIBRARY);
 
     	assertEquals(null, documentLibrary);
-    	
+
     	siteService.deleteSite(siteShortName);
     }
-    
+
     @Test
     public void testCreateWithSpaceTemplate() {
     	AuthenticationUtil.setFullyAuthenticatedUser(ADMIN_USER_NAME);
@@ -95,15 +87,15 @@ public class ShareSiteSpaceTemplateTest {
     	String siteShortName = "test-site-" + System.currentTimeMillis();
 		logger.debug("with space template: " + siteShortName);
 		SiteInfo testSite = siteService.createSite(presetName, siteShortName, "test site", "test site description", SiteVisibility.PUBLIC);
-    	
+
     	NodeRef documentLibrary = siteService.getContainer(testSite.getShortName(), SiteService.DOCUMENT_LIBRARY);
-    
+
     	List<ChildAssociationRef> children = nodeService.getChildAssocs(documentLibrary);
     	int size = children.size();
 
     	siteService.deleteSite(siteShortName);
     	nodeService.deleteNode(spaceTemplate);
-    	
+
     	assertEquals(1, size);
     }
 }
